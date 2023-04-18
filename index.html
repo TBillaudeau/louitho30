@@ -1,0 +1,225 @@
+<!-- 
+	//////////////////////////////////////////////////////
+
+	Louison & Thomas
+	DESIGNED & DEVELOPED by Thomas
+
+	//////////////////////////////////////////////////////
+	-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Louison & Thomas</title>
+	<link rel="shortcut icon" href="shortcut.png">
+	<link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700' rel='stylesheet'
+		type='text/css'>
+
+	<style>
+		html,
+		body {
+			color: white;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			font-size: 1.8em;
+		}
+
+		body {
+			background: url('bg.gif') repeat;
+			font-family: 'Aldrich', sans-serif;
+		}
+
+		.content {
+			position: absolute;
+			top: 40%;
+			transform: translateY(-50%);
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.counter {
+			display: flex;
+			justify-content: space-between !important;
+		}
+
+		.clockinner {
+			font-family: "Work Sans", Arial, sans-serif;
+			color: #828282;
+			text-align: center;
+			width: 100px;
+			height: 100px;
+			background: rgb(255, 255, 255);
+			border-radius: 18%;
+			margin: 0px 18px 25px 18px;
+		}
+
+		.smalltext {
+			text-transform: uppercase;
+			font-size: 12px;
+		}
+
+		.number {
+			font-size: 26px;
+			font-weight: 900;
+		}
+
+		h1 {
+			display: flex;
+			margin-bottom: 0px;
+			font-size: 100px;
+			font-weight: 100;
+			line-height: 1.5;
+			text-align: center;
+			font-family: "Sacramento", Arial, serif;
+		}
+
+		h2 {
+			display: flex;
+			border-top: 2px solid #fff;
+			border-bottom: 2px solid #fff;
+			padding: 5px 0px;
+			margin-bottom: 40px;
+			color: #fff;
+			font-weight: 400;
+			font-size: 18px;
+			letter-spacing: 7px;
+		}
+
+		.logo {
+			display: flex;
+			height: 125px;
+			margin: 25px 0px 20px 0px;
+		}
+
+		.overlay {
+			z-index: -1;
+			position: absolute;
+			bottom: 0;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(0, 0, 0, 0.5);
+		}
+
+		::selection {
+			color: #fff;
+			background: #af1f24;
+		}
+	</style>
+</head>
+
+<body>
+	<audio autoplay loop muted="muted">
+		<source src="love.mp3" type="audio/mpeg">
+	</audio>
+
+	<div class="overlay"></div>
+
+	<div class="content">
+		<h1>Louison &amp; Thomas</h1>
+		<h2 id="value">30.05.2018</h2>
+
+		<div class="counter">
+			<div class="clockinner">
+				<span class="number a"></span>
+				<div class="smalltext">annees</div>
+			</div>
+			<div class="clockinner">
+				<span class="number m"></span>
+				<div class="smalltext">mois</div>
+			</div>
+			<div class="clockinner">
+				<span class="number d"></span>
+				<div class="smalltext">jours</div>
+			</div>
+		</div>
+		<img class="logo" src="shortcut.png">
+	</div>
+
+	<script>
+
+		///// Time Difference 
+		var target = new Date("May 30, 2018 15:00:00");
+		function getDiff() {
+			var now = new Date();
+			var diff = Math.floor(now.getTime() - target.getTime());
+
+			var totalDays = Math.floor(diff / (1000 * 60 * 60 * 24) * 1);
+
+			var years = Math.floor(totalDays / 365);
+			var months = Math.floor(totalDays % 365 / 31);
+			var days = now.getDate();
+
+			return [years, months, days];
+		}
+
+
+		///// Counter
+		function counter() {
+			const [years, months, days] = getDiff();
+
+			document.querySelector('.counter .a').innerHTML = years;
+			document.querySelector('.counter .m').innerHTML = months;
+			document.querySelector('.counter .d').innerHTML = days;
+		}
+
+		window.onload = function () {
+			window.setInterval(counter, 1000);
+			counter();
+		};
+
+
+		///// Audio
+		var audio = document.createElement('audio');
+		var first = true;
+		window.addEventListener('mousedown', onmousedown);
+
+		function onmousedown() {
+			if (!first) return;
+			first = false;
+			audio.src = "love.mp3";
+			audio.play();
+		}
+
+
+		///// Animation
+		function animateNumber(callback, from, to, duration) {
+			let start = null,
+				animate = timestamp => {
+					start = start || timestamp;
+					let progress = Math.min((timestamp - start) / duration, 1);
+					callback(progress * (to - from) + from);
+					if (progress < 1) {
+						window.requestAnimationFrame(animate);
+					}
+				};
+			window.requestAnimationFrame(animate);
+		}
+
+		const [years, months, days] = getDiff();
+
+		animateNumber(value => {
+			document.querySelector('.a').textContent = Math.floor(value);
+		}, 0, years, 3000);
+
+		animateNumber(value => {
+			document.querySelector('.m').textContent = Math.floor(value);
+		}, 0, months, 3000);
+
+		animateNumber(value => {
+			document.querySelector('.d').textContent = Math.floor(value);
+		}, 0, days, 3000);
+
+	</script>
+
+</body>
+
+</html>
